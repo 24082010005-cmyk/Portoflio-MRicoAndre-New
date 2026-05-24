@@ -1,0 +1,1883 @@
+<!DOCTYPE html>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: "Poppins", sans-serif;
+    }
+
+    :root {
+      --bg: #07020f;
+      --card: #120c1b;
+      --text: #f8f7ff;
+      --muted: #c8c0da;
+      --primary: #a95ce8;
+      --primary-dark: #7b3bbc;
+      --border: #241b33;
+      --surface: rgba(111, 58, 190, 0.18);
+    }
+
+    html,
+    body {
+      scroll-behavior: smooth;
+      width: 100%;
+      min-width: 0;
+      max-width: 100%;
+      overflow-x: hidden;
+    }
+
+    body {
+      position: relative;
+    }
+
+    img,
+    video,
+    canvas,
+    svg {
+      max-width: 100%;
+      height: auto;
+    }
+
+    section,
+    header,
+    footer {
+      width: 100%;
+      max-width: 100%;
+      overflow-x: clip;
+    }
+
+    /* Scroll Animation Classes */
+    .fade-up {
+      opacity: 0;
+      transform: translateY(40px);
+      transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+    }
+
+    .fade-up.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .fade-down {
+      opacity: 0;
+      transform: translateY(-40px);
+      transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+    }
+
+    .fade-down.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .fade-left {
+      opacity: 0;
+      transform: translateX(-40px);
+      transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+    }
+
+    .fade-left.visible {
+      opacity: 1;
+      transform: translateX(0);
+    }
+
+    .fade-right {
+      opacity: 0;
+      transform: translateX(40px);
+      transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+    }
+
+    .fade-right.visible {
+      opacity: 1;
+      transform: translateX(0);
+    }
+
+    /* Staggered delay for children */
+    .fade-up-delay-1 { transition-delay: 0.1s; }
+    .fade-up-delay-2 { transition-delay: 0.2s; }
+    .fade-up-delay-3 { transition-delay: 0.3s; }
+    .fade-up-delay-4 { transition-delay: 0.4s; }
+
+    body {
+      background: radial-gradient(circle at top left, rgba(120, 75, 210, 0.12), transparent 20%), var(--bg);
+      color: var(--text);
+      transition: opacity 0.28s ease, filter 0.28s ease;
+    }
+
+    body.modal-open {
+      /* lock scroll while modal is open without changing document flow */
+      overflow: hidden;
+      touch-action: none;
+    }
+
+    body.modal-open .projects-track {
+      animation-play-state: paused;
+    }
+
+    body.scrolling {
+      opacity: 0.92;
+      filter: blur(0.08rem);
+    }
+
+    body.scroll-restored {
+      opacity: 1;
+      filter: blur(0);
+    }
+
+    header {
+      width: 100%;
+      padding: 28px 8%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      background: rgba(10, 4, 23, 0.92);
+      backdrop-filter: blur(14px);
+      z-index: 10;
+    }
+
+    .logo {
+      font-size: 28px;
+      font-weight: 800;
+      color: var(--text);
+      text-decoration: none;
+    }
+
+    .logo span,
+    .highlight {
+      color: var(--primary);
+    }
+
+    nav {
+      display: flex;
+      gap: 28px;
+    }
+
+    nav a {
+      color: var(--text);
+      text-decoration: none;
+      font-weight: 600;
+      transition: 0.3s;
+    }
+
+    nav a:hover {
+      color: var(--primary);
+    }
+
+    .menu-button {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 18px;
+      border-radius: 999px;
+      border: 1px solid rgba(169, 92, 232, 0.28);
+      background: rgba(169, 92, 232, 0.12);
+      color: var(--text);
+      font-weight: 700;
+      font-size: 16px;
+      cursor: pointer;
+      transition: 0.3s ease;
+    }
+
+    .menu-button:hover {
+      background: rgba(169, 92, 232, 0.22);
+      color: var(--primary);
+    }
+
+    @keyframes float-up-down {
+      0%, 100% {
+        transform: translateY(0px);
+      }
+      50% {
+        transform: translateY(-20px);
+      }
+    }
+
+    @keyframes slide-in-right {
+      from {
+        opacity: 0;
+        transform: translateX(100px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+
+    .skill-card {
+      animation: slide-in-right 0.6s ease-out;
+      cursor: pointer;
+    }
+
+    .skill-card:hover {
+      transform: translateY(-8px);
+    }
+
+    @keyframes skill-navbar-slide {
+      from {
+        transform: translateX(0);
+      }
+      to {
+        transform: translateX(-50%);
+      }
+    }
+
+    .skills-navbar {
+      position: relative;
+      overflow: hidden;
+      margin: 0 auto 30px;
+      padding: 14px 0;
+      border-radius: 999px;
+      border: 1px solid rgba(169, 92, 232, 0.34);
+      background: linear-gradient(90deg, rgba(13, 8, 23, 0.98), rgba(25, 14, 42, 0.98));
+    }
+
+    .skills-navbar::before,
+    .skills-navbar::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      width: 60px;
+      height: 100%;
+      pointer-events: none;
+      z-index: 2;
+    }
+
+    .skills-navbar::before {
+      left: 0;
+      background: linear-gradient(to right, rgba(13, 8, 23, 1), rgba(13, 8, 23, 0));
+    }
+
+    .skills-navbar::after {
+      right: 0;
+      background: linear-gradient(to left, rgba(13, 8, 23, 1), rgba(13, 8, 23, 0));
+    }
+
+    .skills-navbar-track {
+      display: flex;
+      width: max-content;
+      animation: skill-navbar-slide 16s linear infinite;
+    }
+
+    .skills-navbar-track.is-stopped {
+      animation-play-state: paused;
+    }
+
+    .skills-navbar-group {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 0 14px;
+    }
+
+    .skill-tab {
+      display: inline-flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      min-width: 136px;
+      min-height: 92px;
+      border: 1px solid rgba(169, 92, 232, 0.28);
+      background: rgba(169, 92, 232, 0.12);
+      color: var(--text);
+      border-radius: 18px;
+      padding: 12px 16px;
+      font-weight: 600;
+      font-size: 14px;
+      letter-spacing: 0.01em;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: transform 0.25s ease, background 0.25s ease;
+    }
+
+    .skill-tab:hover {
+      background: rgba(169, 92, 232, 0.22);
+      transform: translateY(-3px);
+      box-shadow: none;
+    }
+
+    .skill-tab.is-active {
+      background: rgba(169, 92, 232, 0.14);
+      color: var(--text);
+      border-color: rgba(169, 92, 232, 0.85);
+      box-shadow: none;
+    }
+
+    .skill-tab i {
+      font-size: 28px;
+      color: inherit;
+      line-height: 1;
+      transition: color 0.25s ease, filter 0.25s ease;
+    }
+
+    .skill-tab span {
+      line-height: 1.1;
+      font-size: 14px;
+    }
+
+    @keyframes skill-icon-glow {
+      0% {
+        filter: drop-shadow(0 0 0 rgba(169, 92, 232, 0.2));
+      }
+      50% {
+        filter: drop-shadow(0 0 8px rgba(169, 92, 232, 0.85)) drop-shadow(0 0 14px rgba(169, 92, 232, 0.6));
+      }
+      100% {
+        filter: drop-shadow(0 0 3px rgba(169, 92, 232, 0.45));
+      }
+    }
+
+    .skill-tab.is-active i {
+      color: #dba8ff;
+      animation: skill-icon-glow 1.5s ease-in-out infinite;
+    }
+
+    .skill-card.is-active {
+      border-color: var(--primary);
+      box-shadow: none;
+      transform: translateY(-8px);
+    }
+
+    nav {
+      display: none;
+      position: absolute;
+      top: calc(100% + 16px);
+      right: 8%;
+      width: min(240px, 92vw);
+      background: rgba(13, 8, 23, 0.98);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      flex-direction: column;
+      padding: 16px;
+      gap: 12px;
+      z-index: 12;
+      box-shadow: 0 20px 45px rgba(0, 0, 0, 0.18);
+    }
+
+    nav.active {
+      display: flex;
+    }
+
+    section {
+      padding: 90px 8%;
+    }
+
+    .hero {
+      min-height: 86vh;
+      display: grid;
+      grid-template-columns: 1.2fr 0.8fr;
+      align-items: center;
+      gap: 50px;
+      background: radial-gradient(circle at top right, rgba(169, 92, 232, 0.18), transparent 35%),
+                  radial-gradient(circle at bottom left, rgba(120, 75, 210, 0.14), transparent 28%);
+    }
+
+    .hero-text h1 {
+      font-size: clamp(36px, 6vw, 64px);
+      line-height: 1.1;
+      margin-bottom: 14px;
+    }
+
+    .hero-text h2 {
+      font-size: clamp(24px, 4vw, 36px);
+      margin-bottom: 22px;
+    }
+
+    .typing-text {
+      display: inline;
+      overflow: hidden;
+      white-space: nowrap;
+    }
+
+    .typing-text::after {
+      content: '|';
+      animation: blink 0.7s step-end infinite;
+      color: var(--primary);
+    }
+
+    /* Marquee effect after typing */
+    .typing-text.marquee-active {
+      display: inline-block;
+      width: 100%;
+      overflow: hidden;
+      white-space: nowrap;
+    }
+
+    .typing-text.marquee-active::after {
+      display: none;
+    }
+
+    .marquee-content {
+      display: inline-block;
+      padding-left: 100%;
+      animation: scroll-left 12s linear infinite;
+    }
+
+    @keyframes scroll-left {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-100%); }
+    }
+
+    @keyframes blink {
+      50% { opacity: 0; }
+    }
+
+    .hero-text p {
+      color: var(--muted);
+      max-width: 820px;
+      line-height: 1.8;
+      font-size: 17px;
+      margin-bottom: 30px;
+    }
+
+    .socials {
+      display: flex;
+      gap: 16px;
+      margin-bottom: 36px;
+    }
+
+    .socials a {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      color: var(--primary);
+      background: rgba(25, 12, 35, 0.95);
+      border: 1px solid rgba(155, 75, 160, 0.26);
+      font-size: 22px;
+      text-decoration: none;
+      transition: 0.3s;
+    }
+
+    .socials a:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 0 20px var(--primary);
+    }
+
+    .btn {
+      display: inline-block;
+      padding: 15px 32px;
+      background: var(--primary);
+      color: #fff;
+      border-radius: 999px;
+      text-decoration: none;
+      font-weight: 700;
+      box-shadow: 0 0 25px rgba(169, 92, 232, 0.55);
+      transition: 0.3s;
+    }
+
+    .btn:hover {
+      background: var(--primary-dark);
+      transform: scale(1.05);
+    }
+
+    .hero-image {
+      display: flex;
+      justify-content: center;
+    }
+
+    .hero-image img {
+      width: min(430px, 80vw);
+      aspect-ratio: 1 / 1;
+      height: auto;
+      object-fit: cover;
+      border-radius: 50%;
+      border: 4px solid rgba(198, 120, 201, 0.25);
+      box-shadow: 0 0 55px rgba(198, 120, 201, 0.38);
+      animation: float-up-down 3s ease-in-out infinite;
+    }
+
+    .section-title {
+      font-size: 38px;
+      margin-bottom: 28px;
+      text-align: center;
+    }
+
+    .about,
+    .projects,
+    .contact {
+      background: rgba(13, 8, 23, 0.95);
+      border: 1px solid rgba(65, 26, 91, 0.15);
+      box-shadow: 0 12px 30px rgba(25, 9, 45, 0.28);
+    }
+
+    .about p {
+      max-width: 900px;
+      margin: auto;
+      text-align: center;
+      color: var(--muted);
+      line-height: 1.9;
+      font-size: 17px;
+    }
+
+    .skills-grid,
+    .project-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 22px;
+    }
+
+    @keyframes project-slide-left {
+      from {
+        transform: translateX(0);
+      }
+      to {
+        transform: translateX(-50%);
+      }
+    }
+
+    .projects-navbar {
+      position: relative;
+      overflow: hidden;
+      margin-top: 8px;
+      padding: 8px 0 14px;
+    }
+
+    .projects-navbar::before,
+    .projects-navbar::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      height: 100%;
+      width: 76px;
+      pointer-events: none;
+      z-index: 2;
+    }
+
+    .projects-navbar::before {
+      left: 0;
+      background: linear-gradient(to right, rgba(13, 8, 23, 1), rgba(13, 8, 23, 0));
+    }
+
+    .projects-navbar::after {
+      right: 0;
+      background: linear-gradient(to left, rgba(13, 8, 23, 1), rgba(13, 8, 23, 0));
+    }
+
+    .projects-track {
+      display: flex;
+      width: max-content;
+      transform: translateX(0);
+      transition: transform 0.4s ease;
+      will-change: transform;
+    }
+
+    .project-slider-controls {
+      position: absolute;
+      top: 50%;
+      left: 0;
+      right: 0;
+      display: flex;
+      justify-content: space-between;
+      pointer-events: none;
+      transform: translateY(-50%);
+      z-index: 3;
+    }
+
+    .project-slider-button {
+      pointer-events: auto;
+      border: none;
+      background: rgba(18, 11, 32, 0.88);
+      color: var(--text);
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 12px 28px rgba(0, 0, 0, 0.28);
+      cursor: pointer;
+      transition: transform 0.2s ease, background 0.2s ease;
+    }
+
+    .project-slider-button:hover,
+    .project-slider-button:focus-visible {
+      background: rgba(108, 79, 186, 0.96);
+      transform: translateY(-1px);
+    }
+
+    .project-slider-button:disabled {
+      opacity: 0.35;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .projects-group {
+      display: flex;
+      gap: 22px;
+      padding: 0 11px;
+    }
+
+    .project-table {
+      flex: 0 0 clamp(300px, calc((84vw - 22px) / 2), 620px);
+      border: 1px solid rgba(169, 92, 232, 0.48);
+      border-radius: 26px;
+      background: rgba(28, 18, 47, 0.96);
+      box-shadow: 0 20px 48px rgba(0, 0, 0, 0.28);
+      overflow: hidden;
+      transition: transform 0.3s ease, border-color 0.3s ease, background 0.3s ease;
+    }
+
+    .project-table:hover {
+      transform: translateY(-6px);
+      border-color: rgba(169, 92, 232, 0.76);
+      background: rgba(37, 24, 64, 0.98);
+    }
+
+    .project-media {
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      object-fit: cover;
+      display: block;
+      border-bottom: 1px solid rgba(169, 92, 232, 0.22);
+    }
+
+    .project-content {
+      padding: 24px;
+      text-align: center;
+    }
+
+    .project-content h3 {
+      font-size: clamp(24px, 2.5vw, 38px);
+      line-height: 1.2;
+      margin-bottom: 12px;
+    }
+
+    .project-stack {
+      color: #cf9ef5;
+      font-weight: 600;
+      font-size: 22px;
+      margin-bottom: 24px;
+    }
+
+    .project-actions {
+      display: flex;
+      justify-content: center;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+
+    .project-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      min-width: 162px;
+      padding: 12px 24px;
+      border-radius: 999px;
+      border: 1px solid rgba(169, 92, 232, 0.62);
+      background: var(--primary);
+      color: #140a23;
+      text-decoration: none;
+      font-size: 22px;
+      font-weight: 700;
+      transition: transform 0.25s ease, background 0.25s ease;
+    }
+
+    .project-btn:hover {
+      transform: translateY(-2px);
+      background: #c27fe8;
+    }
+
+    .project-btn.secondary {
+      background: rgba(18, 11, 32, 0.95);
+      color: var(--text);
+    }
+
+    .project-detail-btn {
+      cursor: pointer;
+    }
+
+    .project-modal {
+      position: fixed;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      background: rgba(4, 2, 10, 0.86);
+      /* keep a light backdrop blur but not too heavy to avoid repaint flicker */
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+      z-index: 9999;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.22s ease, visibility 0s linear 0.22s;
+      visibility: hidden;
+      will-change: opacity;
+    }
+
+    .project-modal.active {
+      opacity: 1;
+      pointer-events: auto;
+      visibility: visible;
+      transition-delay: 0s;
+    }
+
+    .project-modal-dialog {
+      position: relative;
+      width: min(720px, 92vw);
+      max-height: calc(100vh - 80px);
+      margin: auto;
+      overflow-y: auto;
+      border-radius: 18px;
+      border: 1px solid rgba(169, 92, 232, 0.35);
+      background: linear-gradient(180deg, rgba(18,14,26,0.98), rgba(12,9,18,0.98));
+      box-shadow: 0 18px 48px rgba(0, 0, 0, 0.45);
+      padding: 26px 26px 22px;
+      transform: translateZ(0);
+      will-change: transform, opacity;
+    }
+
+    .project-modal-close {
+      position: absolute;
+      top: 14px;
+      right: 18px;
+      border: none;
+      background: transparent;
+      color: #f6f2ff;
+      font-size: 40px;
+      line-height: 1;
+      cursor: pointer;
+      padding: 0;
+    }
+
+    .project-modal-title {
+      font-size: clamp(30px, 4vw, 46px);
+      line-height: 1.15;
+      margin-bottom: 10px;
+    }
+
+    .project-modal-subtitle {
+      font-size: clamp(20px, 2.5vw, 33px);
+      color: #c884e9;
+      font-weight: 700;
+      margin-bottom: 18px;
+    }
+
+    .project-modal-divider {
+      border: 0;
+      height: 1px;
+      background: rgba(169, 92, 232, 0.26);
+      margin-bottom: 22px;
+    }
+
+    .project-modal-intro {
+      font-size: clamp(14px, 1.6vw, 18px);
+      line-height: 1.6;
+      font-weight: 600;
+      margin-bottom: 10px;
+      color: #efe9f8;
+    }
+
+    .project-modal-list {
+      margin: 0;
+      padding-left: 26px;
+      color: #f4f0ff;
+    }
+
+    .project-modal-list li {
+      font-size: clamp(13px, 1.4vw, 18px);
+      line-height: 1.6;
+      margin-bottom: 10px;
+      color: #f4f0ff;
+    }
+
+    .project-modal-list strong {
+      font-weight: 800;
+    }
+
+    .timeline {
+      position: relative;
+      padding: 40px 0;
+    }
+
+    .timeline::before {
+      content: '';
+      position: absolute;
+      left: 50%;
+      top: 0;
+      transform: translateX(-50%);
+      width: 4px;
+      height: 100%;
+      background: rgba(169, 92, 232, 0.18);
+    }
+
+    .timeline-item {
+      position: relative;
+      width: calc(50% - 60px);
+      margin-bottom: 40px;
+    }
+
+    .flip-card {
+      perspective: 1200px;
+    }
+
+    .flip-card-inner {
+      position: relative;
+      width: 100%;
+      min-height: 380px;
+      transition: transform 0.7s ease;
+      transform-style: preserve-3d;
+    }
+
+    .timeline-item:hover .flip-card-inner {
+      transform: rotateY(180deg);
+    }
+
+    .flip-card-front,
+    .flip-card-back {
+      position: absolute;
+      inset: 0;
+      backface-visibility: hidden;
+      border-radius: 24px;
+      overflow: hidden;
+    }
+
+    .flip-card-front {
+      background: rgba(20, 10, 34, 0.98);
+      border: 1px solid var(--border);
+      padding: 24px 26px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      overflow-y: visible;
+    }
+
+    .timeline-item:hover .flip-card-front {
+      border-color: var(--primary);
+    }
+
+    .flip-card-front h3 {
+      margin-bottom: 12px;
+      font-size: 22px;
+      font-weight: 700;
+      line-height: 1.3;
+    }
+
+    .flip-card-front-date {
+      display: inline-block;
+      margin-bottom: 16px;
+      color: var(--primary);
+      font-weight: 700;
+      letter-spacing: 0.02em;
+      font-size: 14px;
+    }
+
+    .experience .timeline-item .flip-card-front-date {
+      position: absolute;
+      top: 28px;
+      margin-bottom: 0;
+      color: var(--primary);
+      font-weight: 700;
+      letter-spacing: 0.02em;
+      font-size: 32px;
+      white-space: nowrap;
+      text-align: left;
+      z-index: 10;
+    }
+
+    .experience .timeline-item:nth-child(odd) .flip-card-front-date {
+      right: -240px;
+      left: auto;
+      text-align: left;
+    }
+
+    .experience .timeline-item:nth-child(even) .flip-card-front-date {
+      left: -240px;
+      right: auto;
+      text-align: right;
+    }
+
+    .experience .flip-card-front-date.ketua-komisi-year {
+      right: -210px;
+    }
+
+    .experience .flip-card-front .flip-card-front-date {
+      position: static;
+      display: none;
+    }
+
+    .flip-card-front p {
+      color: var(--muted);
+      line-height: 1.7;
+      margin: 0 0 16px;
+      font-size: 14px;
+    }
+
+    .flip-card-front ul {
+      padding-left: 20px;
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.8;
+      list-style: disc inside;
+    }
+
+    .flip-card-front ul li {
+      margin-bottom: 10px;
+      font-size: 14px;
+    }
+
+    .flip-card-back {
+      background: #111;
+      transform: rotateY(180deg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .flip-card-back img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .timeline-item:hover .flip-card-back {
+      border-color: var(--primary);
+    }
+
+    .timeline-item:nth-child(odd) {
+      left: 0;
+    }
+
+    .timeline-item:nth-child(even) {
+      left: calc(50% + 60px);
+    }
+
+    .timeline-item::before {
+      content: '';
+      position: absolute;
+      top: 28px;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: var(--primary);
+      border: 4px solid var(--bg);
+    }
+
+    .timeline-item:nth-child(odd)::before {
+      right: -46px;
+    }
+
+    .timeline-item:nth-child(even)::before {
+      left: -46px;
+    }
+
+    .timeline-item h3 {
+      margin-bottom: 10px;
+      font-size: 22px;
+    }
+
+    .timeline-date {
+      position: absolute;
+      top: 40px;
+      right: -155px;
+      transform: translateY(-50%);
+      color: var(--primary);
+      font-weight: 700;
+      letter-spacing: 0.02em;
+      font-size: 32px;
+      white-space: nowrap;
+      text-align: left;
+    }
+
+    .education .timeline-item:nth-child(2) .timeline-date {
+      right: auto;
+      left: -155px;
+      text-align: right;
+    }
+
+    .timeline-item p {
+      color: var(--muted);
+      line-height: 1.8;
+      margin: 0 0 14px;
+    }
+
+    .flip-card-back ul {
+      padding-left: 18px;
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.8;
+    }
+
+    .flip-card-back ul li {
+      margin-bottom: 10px;
+    }
+
+    @media (max-width: 900px) {
+      .timeline::before {
+        left: 20px;
+      }
+
+      .timeline-item,
+      .timeline-item:nth-child(odd),
+      .timeline-item:nth-child(even) {
+        width: calc(100% - 72px);
+        left: 0;
+        margin-left: 40px;
+      }
+
+      .timeline-item::before {
+        left: -46px;
+        right: auto;
+      }
+
+      .timeline-date,
+      .experience .timeline-item:nth-child(odd) .flip-card-front-date,
+      .experience .timeline-item:nth-child(even) .flip-card-front-date {
+        position: static;
+        display: block;
+        margin: 0 0 12px;
+        font-size: 22px;
+        text-align: left;
+        white-space: normal;
+      }
+    }
+
+    .card {
+      background: rgba(20, 10, 34, 0.98);
+      padding: 26px;
+      border-radius: 18px;
+      border: 1px solid var(--border);
+      transition: 0.3s;
+    }
+
+    .card:hover {
+      transform: translateY(-8px);
+      border-color: var(--primary);
+      box-shadow: 0 0 25px rgba(169, 92, 232, 0.24);
+    }
+
+    .skill-card:hover,
+    .skill-card.is-active {
+      box-shadow: none;
+    }
+
+    .card i {
+      font-size: 36px;
+      color: var(--primary);
+      margin-bottom: 14px;
+    }
+
+    .card h3 {
+      margin-bottom: 10px;
+    }
+
+    .card p {
+      color: var(--muted);
+      line-height: 1.7;
+    }
+
+    .contact-box {
+      max-width: 650px;
+      margin: auto;
+      text-align: center;
+      background: var(--card);
+      padding: 35px;
+      border-radius: 20px;
+      border: 1px solid var(--border);
+    }
+
+    .contact-box p {
+      color: var(--muted);
+      margin-bottom: 24px;
+    }
+
+    footer {
+      text-align: center;
+      padding: 25px;
+      color: var(--muted);
+      border-top: 1px solid var(--border);
+    }
+
+    @media (max-width: 900px) {
+      .hero {
+        grid-template-columns: 1fr;
+        text-align: center;
+      }
+
+      .socials {
+        justify-content: center;
+      }
+
+      .hero-image {
+        order: -1;
+      }
+
+      nav {
+        right: 4%;
+        width: min(220px, 92vw);
+      }
+
+      .skills-grid,
+      .project-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .projects-navbar::before,
+      .projects-navbar::after {
+        width: 34px;
+      }
+
+      .project-table {
+        flex-basis: calc(84vw - 8px);
+      }
+
+      .project-content h3 {
+        font-size: 28px;
+      }
+
+      .project-stack {
+        font-size: 18px;
+      }
+
+      .project-btn {
+        min-width: 146px;
+        padding: 11px 18px;
+        font-size: 18px;
+      }
+
+      .project-modal {
+        padding: 14px;
+      }
+
+      .project-modal-dialog {
+        border-radius: 20px;
+        padding: 26px 20px 20px;
+      }
+
+      .project-modal-close {
+        top: 8px;
+        right: 12px;
+        font-size: 34px;
+      }
+
+      .project-modal-list {
+        padding-left: 20px;
+      }
+
+      .skills-navbar::before,
+      .skills-navbar::after {
+        width: 26px;
+      }
+
+      .skill-tab {
+        min-width: 112px;
+        min-height: 82px;
+        padding: 10px 12px;
+      }
+
+      .skill-tab i {
+        font-size: 24px;
+      }
+
+      .skill-tab span {
+        font-size: 13px;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .skills-navbar-track {
+        animation: none;
+      }
+
+      .projects-track {
+        animation: none;
+      }
+    }
+  </style>
+</head>
+<body>
+<header>
+    <a href="#" class="logo fade-up">Mochamad <span>Rico Andreano</span></a>
+
+    <button class="menu-button" id="menuButton" aria-expanded="false" aria-controls="navMenu">
+      <i class="fa-solid fa-bars"></i>
+    </button>
+
+    <nav id="navMenu" aria-label="Navigasi utama">
+      <a href="#home" class="fade-up fade-up-delay-1">Home</a>
+      <a href="#education" class="fade-up fade-up-delay-3">Pendidikan</a>
+      <a href="#skills" class="fade-up fade-up-delay-4">Skill</a>
+      <a href="#experience" class="fade-up fade-up-delay-6">Pengalaman</a>
+    </nav>
+  </header>
+
+  <section class="hero" id="home">
+    <div class="hero-text">
+      <h1 class="fade-up">Hai, Saya <span class="highlight">Andre </span></h1>
+      <p class="fade-up fade-up-delay-2">
+        Saya adalah mahasiswa aktif program studi Sistem Informasi UPN “Veteran” Jawa Timur yang memiliki minat besar pada bidang teknologi, pengembangan aplikasi, desain web, serta jaringan komputer dan infrastruktur IT. 
+        Memiliki pengalaman dalam konfigurasi perangkat jaringan seperti router dan Mikrotik, memahami dasar-dasar manajemen jaringan, serta aktif mengembangkan kemampuan melalui berbagai proyek dan pembelajaran mandiri. 
+        Saya juga memiliki ketertarikan untuk terus berkembang di bidang Network Engineer, IT Support, dan pengembangan sistem, didukung dengan kemampuan problem solving, kerja sama tim, serta semangat belajar yang tinggi untuk menciptakan solusi digital yang inovatif dan andal.
+
+      </p>
+
+      <div class="socials fade-up fade-up-delay-3">
+        <a href="https://www.linkedin.com/in/mochamad-rico-andreano-a5953133b?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app" target="_blank"><i class="fa-brands fa-linkedin-in"></i></a>
+        <a href="https://github.com/24082010005-cmyk" target="_blank"><i class="fa-brands fa-github"></i></a>
+        <a href="https://www.instagram.com/andreazzx7?igsh=OWp3cDM3YndnMmN1" target="_blank"><i class="fa-brands fa-instagram"></i></a>
+        <a href="https://youtube.com/@andrekiyowo?si=oU2zrbFu8BCjW_7n" target="_blank"><i class="fa-brands fa-youtube"></i></a>
+      </div>
+
+      <a href="assets/CV_Mochamad_Rico_Andreano.pdf" class="btn fade-up fade-up-delay-4" download>Unduh CV</a>
+    </div>
+
+    <div class="hero-image fade-right">
+      <img src="assets/profile.jpg" alt="Foto profil">
+    </div>
+  </section>
+
+
+  <section class="education" id="education">
+    <h2 class="section-title fade-up">Pendidikan</span></h2>
+    <div class="timeline fade-up fade-up-delay-1">
+      <div class="timeline-item">
+        <span class="timeline-date">2021</span>
+        <div class="card fade-up fade-up-delay-2">
+          <h3>SMA/SMK</h3>
+          <p style="color: var(--primary); font-size: 18px;">SMKS YAPALIS KRIAN</p>
+          <p>Teknik Komputer dan Jaringan</p>
+          <p>Predikat: Eligible 10 besar Teknik Komputer dan Jaringan</p>
+          <p>Proyek
+            <ul>
+              <li>Teknisi Lab Komputer</li>
+              <li>Pengembangan & Implementasi Lab Komputer</li>
+              <li>Merancang Sistem WiFi Voucher Berbasis Mikrotik</li>
+            </ul>
+          </p>
+        </div>
+      </div>
+      <div class="timeline-item">
+        <span class="timeline-date">2024</span>
+        <div class="card fade-up fade-up-delay-3">
+          <h3>UNIVERSITAS</h3>
+          <p style="color: var(--primary); font-size: 18px;">Universitas Pembangunan Nasional “Veteran” Jawa Timur</p>
+          <p>S1 Sistem Informasi</p>
+          <p>Proyek
+            <ul>
+              <li>Aplikasi Simple Paint </li>
+              <li>Aplikasi Toko Kebutuhan Bayi</li>
+              <li>Aplikasi Sistem Iuran Kebersihan RT</li>
+              <li>Website Sistem Reservasi Lapangan Badminton</li>
+            </ul>
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="skills" id="skills">
+    <h2 class="section-title fade-up">Skill</span></h2>
+
+    <div class="skills-navbar fade-up fade-up-delay-1" aria-label="Navigasi skill berjalan">
+      <div class="skills-navbar-track" id="skillsNavbarTrack">
+        <div class="skills-navbar-group">
+          <button class="skill-tab is-active" type="button" data-target-skill="winbox"><i class="fa-solid fa-server"></i><span>Winbox</span></button>
+          <button class="skill-tab" type="button" data-target-skill="mysql"><i class="fa-solid fa-database"></i><span>MySql</span></button>
+          <button class="skill-tab" type="button" data-target-skill="java"><i class="fa-brands fa-java"></i><span>Jawa</span></button>
+          <button class="skill-tab" type="button" data-target-skill="javascript"><i class="fa-brands fa-js"></i><span>JavaScript</span></button>
+          <button class="skill-tab" type="button" data-target-skill="react"><i class="fa-brands fa-react"></i><span>React</span></button>
+          <button class="skill-tab" type="button" data-target-skill="tailwind"><i class="fa-solid fa-wind"></i><span>Tailwind CSS</span></button>
+          <button class="skill-tab" type="button" data-target-skill="php"><i class="fa-brands fa-php"></i><span>PHP</span></button>
+          <button class="skill-tab" type="button" data-target-skill="laravel"><i class="fa-brands fa-laravel"></i><span>Laravel</span></button>
+        </div>
+        <div class="skills-navbar-group" aria-hidden="true">
+          <button class="skill-tab is-active" type="button" tabindex="-1" data-target-skill="winbox"><i class="fa-solid fa-server"></i><span>Winbox</span></button>
+          <button class="skill-tab" type="button" tabindex="-1" data-target-skill="mysql"><i class="fa-solid fa-database"></i><span>MySql</span></button>
+          <button class="skill-tab" type="button" tabindex="-1" data-target-skill="java"><i class="fa-brands fa-java"></i><span>Jawa</span></button>
+          <button class="skill-tab" type="button" tabindex="-1" data-target-skill="javascript"><i class="fa-brands fa-js"></i><span>JavaScript</span></button>
+          <button class="skill-tab" type="button" tabindex="-1" data-target-skill="react"><i class="fa-brands fa-react"></i><span>React</span></button>
+          <button class="skill-tab" type="button" tabindex="-1" data-target-skill="tailwind"><i class="fa-solid fa-wind"></i><span>Tailwind CSS</span></button>
+          <button class="skill-tab" type="button" tabindex="-1" data-target-skill="php"><i class="fa-brands fa-php"></i><span>PHP</span></button>
+          <button class="skill-tab" type="button" tabindex="-1" data-target-skill="laravel"><i class="fa-brands fa-laravel"></i><span>Laravel</span></button>
+        </div>
+      </div>
+    </div>
+
+      
+  </section>
+
+
+  <section class="experience" id="experience">
+    <h2 class="section-title fade-up">Pengalaman</span></h2>
+    <div class="timeline fade-up fade-up-delay-1">
+      <div class="timeline-item">
+        <span class="flip-card-front-date">Okt 2024</span>
+        <div class="flip-card">
+          <div class="flip-card-inner">
+            <div class="flip-card-front">
+              <h3>PANITIA FUNTASTECH 2024 – UPNVJT, Surabaya</h3>
+              <p>Anggota Panitia Perlengkapan dan Konsumsi</p>
+              <ul>
+                <li>Bertanggung jawab dalam pengadaan dan distribusi perlengkapan serta konsumsi selama kegiatan berlangsung</li>
+                <li>Memastikan ketersediaan logistik sesuai kebutuhan acara secara tepat waktu</li>
+                <li>Berkoordinasi dengan tim untuk mendukung kelancaran operasional kegiatan</li>
+              </ul>
+            </div>
+            <div class="flip-card-back">
+              <img src="assets/FuntasTeech.png" alt="Foto pengalaman Panitia Funtastech 2024">
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="timeline-item">
+        <span class="flip-card-front-date">Des 2025</span>
+        <div class="flip-card">
+          <div class="flip-card-inner">
+            <div class="flip-card-front">
+              <h3>PANITIA PEMIRA SISTEM INFORMASI 2025 – UPNVJT, Surabaya</h3>
+              <p>Anggota Panitia Perlengkapan dan Konsumsi</p>
+              <ul>
+                <li>Mengelola kebutuhan perlengkapan dan konsumsi untuk mendukung jalannya kegiatan pemira</li>
+                <li>Melakukan koordinasi dengan divisi lain untuk memastikan kesiapan logistik</li>
+                <li>Membantu memastikan kelancaran pelaksanaan acara melalui dukungan operasional</li>
+              </ul>
+            </div>
+            <div class="flip-card-back">
+              <img src="assets/PemiraSIFO.png" alt="Foto pengalaman Panitia Pemira Sistem Informasi 2025">
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="timeline-item">
+        <span class="flip-card-front-date">Jul 2025</span>
+        <div class="flip-card">
+          <div class="flip-card-inner">
+            <div class="flip-card-front">
+              <h3>PANITIA DIES NATALIS SISTEM INFORMASI 2025 – UPNVJT, Surabaya</h3>
+              <p>Anggota Panitia Perlengkapan dan Konsumsi</p>
+              <ul>
+                <li>Menyiapkan dan mengelola perlengkapan serta konsumsi selama kegiatan berlangsung</li>
+                <li>Mengatur distribusi logistik agar berjalan efektif dan efisien</li>
+                <li>Mendukung kelancaran acara melalui pengelolaan kebutuhan operasional</li>
+              </ul>
+            </div>
+            <div class="flip-card-back">
+              <img src="assets/DiesnatalisSIFO.png" alt="Foto pengalaman Panitia Dies Natalis Sistem Informasi 2025">
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="timeline-item">
+        <span class="flip-card-front-date">Agu 2025</span>
+        <div class="flip-card">
+          <div class="flip-card-inner">
+            <div class="flip-card-front">
+              <h3>PANITIA INFORMATION SYSTEM COMPETITION (ISC) 2025 – UPNVJT, Surabaya</h3>
+              <p>Anggota Panitia Perlengkapan dan Konsumsi</p>
+              <ul>
+                <li>Bertanggung jawab terhadap kesiapan perlengkapan dan konsumsi selama kompetisi berlangsung</li>
+                <li>Mengelola distribusi kebutuhan peserta dan panitia</li>
+                <li>Berkoordinasi dengan tim untuk menjaga kelancaran kegiatan</li>
+              </ul>
+            </div>
+            <div class="flip-card-back">
+              <img src="assets/ISC.png" alt="Foto pengalaman Panitia Information System Competition 2025">
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="timeline-item">
+        <span class="flip-card-front-date">Agu 2025</span>
+        <div class="flip-card">
+          <div class="flip-card-inner">
+            <div class="flip-card-front">
+              <h3>PANITIA DIES NATALIS FASILKOM 2025 – UPNVJT, Surabaya</h3>
+              <p>Anggota Panitia Perlengkapan dan Konsumsi</p>
+              <ul>
+                <li>Mengelola kebutuhan logistik dan konsumsi untuk mendukung kegiatan fakultas</li>
+                <li>Memastikan distribusi perlengkapan berjalan sesuai perencanaan</li>
+                <li>Berkolaborasi dengan panitia lain untuk menjaga efektivitas pelaksanaan acara</li>
+              </ul>
+            </div>
+            <div class="flip-card-back">
+              <img src="assets/DiesnatalisFIK.png" alt="Foto pengalaman Panitia Dies Natalis Fasilkom 2025">
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="timeline-item">
+        <span class="flip-card-front-date">Agu 2025</span>
+        <div class="flip-card">
+          <div class="flip-card-inner">
+            <div class="flip-card-front">
+              <h3>PANITIA MOSAIK KADERISASI FASILKOM 2025 – UPNVJT, Surabaya</h3>
+              <p>Senior Pendamping</p>
+              <ul>
+                <li>Membimbing dan mendampingi mahasiswa baru dalam proses kaderisasi fakultas</li>
+                <li>Membantu membangun kedisiplinan, kerja sama tim, dan adaptasi lingkungan kampus</li>
+                <li>Berperan aktif dalam menciptakan suasana pembelajaran yang kondusif</li>
+              </ul>
+            </div>
+            <div class="flip-card-back">
+              <img src="assets/Mosaik.png" alt="Foto pengalaman Panitia Mosaik Kaderisasi Fasilkom 2025">
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="timeline-item">
+        <span class="flip-card-front-date">Agu 2025</span>
+        <div class="flip-card">
+          <div class="flip-card-inner">
+            <div class="flip-card-front">
+              <h3>PANITIA DIMENSI (GRADASI) SISTEM INFORMASI 2025 – UPNVJT, Surabaya</h3>
+              <p>Senior Pendamping</p>
+              <ul>
+                <li>Mendampingi mahasiswa baru dalam kegiatan kaderisasi program studi</li>
+                <li>Memberikan arahan serta membantu proses pengembangan soft skill peserta</li>
+                <li>Mendorong partisipasi aktif dan kerja sama dalam setiap kegiatan</li>
+              </ul>
+            </div>
+            <div class="flip-card-back">
+              <img src="assets/Dimensi.png" alt="Foto pengalaman Panitia Dimensi Gradasi Sistem Informasi 2025">
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="timeline-item">
+        <span class="flip-card-front-date">Sep 2025</span>
+        <div class="flip-card">
+          <div class="flip-card-inner">
+            <div class="flip-card-front">
+              <h3>PANITIA EDISI (GRADASI) SISTEM INFORMASI 2025 – UPNVJT, Surabaya</h3>
+              <p>Anggota Panitia Perlengkapan dan Konsumsi</p>
+              <ul>
+                <li>Menyiapkan kebutuhan perlengkapan dan konsumsi selama kegiatan kaderisasi</li>
+                <li>Mengatur distribusi logistik untuk mendukung kelancaran acara</li>
+                <li>Berkoordinasi dengan tim dalam memastikan kesiapan operasional</li>
+              </ul>
+            </div>
+            <div class="flip-card-back">
+              <img src="assets/Edisi.png" alt="Foto pengalaman Panitia Edisi Gradasi Sistem Informasi 2025">
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="timeline-item">
+        <span class="flip-card-front-date">Okt 2025</span>
+        <div class="flip-card">
+          <div class="flip-card-inner">
+            <div class="flip-card-front">
+              <h3>KETUA DIVISI AKSI PKM SISTEM INFORMASI 2025 – UPNVJT, Surabaya</h3>
+              <p>Ketua Divisi</p>
+              <ul>
+                <li>Memimpin tim dalam perencanaan dan pengelolaan perlengkapan serta konsumsi kegiatan</li>
+                <li>Mengatur distribusi logistik dan memastikan seluruh kebutuhan acara terpenuhi</li>
+                <li>Berkoordinasi dengan panitia inti untuk menjaga efektivitas dan kelancaran kegiatan</li>
+              </ul>
+            </div>
+            <div class="flip-card-back">
+              <img src="assets/AksiPKM.png" alt="Foto pengalaman Ketua Divisi Aksi PKM Sistem Informasi 2025">
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="timeline-item">
+        <span class="flip-card-front-date">Nov 2025</span>
+        <div class="flip-card">
+          <div class="flip-card-inner">
+            <div class="flip-card-front">
+              <h3>PANITIA PENSI (GRADASI) SISTEM INFORMASI 2025 – UPNVJT, Surabaya</h3>
+              <p>Anggota Panitia Perlengkapan dan Konsumsi</p>
+              <ul>
+                <li>Mengelola kebutuhan perlengkapan dan konsumsi dalam kegiatan pentas seni kaderisasi</li>
+                <li>Memastikan distribusi logistik berjalan dengan baik selama acara</li>
+                <li>Mendukung kelancaran operasional kegiatan melalui koordinasi tim</li>
+              </ul>
+            </div>
+            <div class="flip-card-back">
+              <img src="assets/Pensi.png" alt="Foto pengalaman Panitia Pensi Gradasi Sistem Informasi 2025">
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="timeline-item">
+        <span class="flip-card-front-date">Apr 2026</span>
+        <div class="flip-card">
+          <div class="flip-card-inner">
+            <div class="flip-card-front">
+              <h3>PANITIA KPU PEMIRA FASILKOM 2026 – UPNVJT, Surabaya</h3>
+              <p>Anggota KPU</p>
+              <ul>
+                <li>Terlibat dalam penyelenggaraan proses pemilihan raya mahasiswa tingkat fakultas</li>
+                <li>Membantu pelaksanaan teknis pemira agar berjalan sesuai prosedur</li>
+                <li>Berkoordinasi dengan tim untuk menjaga transparansi dan kelancaran proses pemilihan</li>
+              </ul>
+            </div>
+            <div class="flip-card-back">
+              <img src="assets/KPUPemira.jpeg" alt="Foto pengalaman Panitia KPU Pemira Fasilkom 2026">
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="timeline-item">
+        <span class="flip-card-front-date">Apr 2026</span>
+        <div class="flip-card">
+          <div class="flip-card-inner">
+            <div class="flip-card-front">
+              <h3>PANITIA PEMIRA FASILKOM 2026 – UPNVJT, Surabaya</h3>
+              <p>Bendahara BPH</p>
+              <ul>
+                <li>Bertanggung jawab dalam pengelolaan keuangan kegiatan</li>
+                <li>Melakukan pencatatan pemasukan dan pengeluaran secara terstruktur</li>
+                <li>Menyusun RAB serta memastikan penggunaan anggaran sesuai perencanaan</li>
+              </ul>
+            </div>
+            <div class="flip-card-back">
+              <img src="assets/BPHPemiraFIK.jpeg" alt="Foto pengalaman Panitia Pemira Fasilkom 2026">
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="timeline-item">
+        <span class="flip-card-front-date ketua-komisi-year">2026/2027</span>
+        <div class="flip-card">
+          <div class="flip-card-inner">
+            <div class="flip-card-front">
+              <h3>KETUA KOMISI 3 BADAN LEGSILATIF MAHASISWA 2026/2027 – UPNVJT, Surabaya</h3>
+              <p>Ketua Komisi (2026/2027)</p>
+              <ul>
+                <li>Bertanggung jawab memimpin dan mengelola Departemen PSDM (Pengembangan Sumber Daya Manusia) yang menaungi bidang kaderisasi, penelitian dan pengembangan, kewirausahaan, serta seni dan olahraga</li>
+                <li>Mengawasi pelaksanaan program kerja departemen guna meningkatkan kualitas sumber daya mahasiswa, kreativitas organisasi, dan pengembangan potensi anggota</li>
+                <li>Berkoordinasi dengan pengurus serta anggota dalam menjaga efektivitas, komunikasi, dan keberlangsungan kegiatan organisasi secara aktif dan terarah</li>
+              </ul>
+            </div>
+            <div class="flip-card-back">
+              <img src="assets/KetuaKomisi3.png" alt="Foto pengalaman Ketua Komisi 3 Badan Legislatif Mahasiswa 2026/2027">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="project-modal" id="projectModal" aria-hidden="true">
+    <div class="project-modal-dialog" role="dialog" aria-modal="true" aria-labelledby="projectModalTitle">
+      <button class="project-modal-close" id="projectModalClose" aria-label="Tutup deskripsi proyek">&times;</button>
+      <h3 class="project-modal-title" id="projectModalTitle" tabindex="-1"></h3>
+      <p class="project-modal-subtitle" id="projectModalSubtitle"></p>
+      <hr class="project-modal-divider">
+      <p class="project-modal-intro" id="projectModalIntro"></p>
+      <ul class="project-modal-list" id="projectModalList"></ul>
+    </div>
+  </div>
+
+
+  <footer>
+    <p>&copy; 2026 Mochamad Rico Andreano. All Rights Reserved.</p>
+  </footer>
+
+  <script>
+    const menuButton = document.getElementById("menuButton");
+    const navMenu = document.getElementById("navMenu");
+
+    document.addEventListener("DOMContentLoaded", () => {
+      // Menu Toggle
+      if (menuButton && navMenu) {
+        menuButton.addEventListener("click", () => {
+          const expanded = navMenu.classList.toggle("active");
+          menuButton.setAttribute("aria-expanded", expanded);
+        });
+      }
+    });
+
+    // Scroll Animation Observer
+    const observerOptions = {
+      root: null,
+      rootMargin: '0px',
+      threshold: 0.1
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        } else {
+          // Fade out when scrolling back up (element leaves viewport)
+          entry.target.classList.remove('visible');
+        }
+      });
+    }, observerOptions);
+
+    // Observe all elements with animation classes
+    document.querySelectorAll('.fade-up, .fade-down, .fade-left, .fade-right').forEach(el => {
+      observer.observe(el);
+    });
+
+    // Close mobile menu when clicking a nav link
+    document.querySelectorAll('nav a').forEach(link => {
+      link.addEventListener('click', () => {
+        navMenu.classList.remove('active');
+      });
+    });
+
+    // Scroll fade effect for up/down motion
+    let lastScrollY = window.scrollY;
+    let scrollTimeout;
+
+    const setScrollFade = (direction) => {
+      document.body.classList.remove('scroll-restored');
+      if (direction === 'down' || direction === 'up') {
+        document.body.classList.add('scrolling-down');
+      }
+      clearTimeout(scrollTimeout);
+      scrollTimeout = setTimeout(() => {
+        document.body.classList.remove('scrolling-down');
+        document.body.classList.add('scroll-restored');
+      }, 180);
+    };
+
+    window.addEventListener('scroll', () => {
+      // if a modal is open, skip scroll fade effects to avoid visual flicker
+      if (document.body.classList.contains('modal-open')) return;
+      const currentScrollY = window.scrollY;
+      if (currentScrollY > lastScrollY) {
+        setScrollFade('down');
+      } else if (currentScrollY < lastScrollY) {
+        setScrollFade('up');
+      }
+      lastScrollY = currentScrollY;
+    });
+
+
+    // Download CV Button
+    const downloadBtn = document.getElementById("downloadBtn");
+    if (downloadBtn) {
+      downloadBtn.addEventListener("click", () => {
+        const link = document.createElement("a");
+        link.href = "assets/CV_Mochamad_Rico_Andreano.pdf";
+        link.download = "CV_Mochamad_Rico_Andreano.pdf";
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      });
+    }
+
+    // Skill Navbar + Card Click to Refresh/Focus
+    const skillCards = Array.from(document.querySelectorAll(".skill-card"));
+    const skillTabs = Array.from(document.querySelectorAll(".skill-tab"));
+    const skillsNavbar = document.querySelector(".skills-navbar");
+    const skillsNavbarTrack = document.getElementById("skillsNavbarTrack");
+
+    const refreshSkillCardAnimation = (card) => {
+      card.style.animation = "none";
+      void card.offsetWidth;
+      card.style.animation = "slide-in-right 0.6s ease-out";
+    };
+
+    const stopSkillLoop = () => {
+      if (skillsNavbarTrack) {
+        skillsNavbarTrack.classList.add("is-stopped");
+      }
+    };
+
+    const startSkillLoop = () => {
+      if (skillsNavbarTrack) {
+        skillsNavbarTrack.classList.remove("is-stopped");
+      }
+    };
+
+    const setActiveSkill = (skillName) => {
+      const selectedCard = skillCards.find((card) => card.dataset.skill === skillName) || null;
+
+      if (selectedCard) {
+        skillCards.forEach((card) => {
+          card.classList.toggle("is-active", card === selectedCard);
+        });
+      }
+
+      skillTabs.forEach((tab) => {
+        tab.classList.toggle("is-active", tab.dataset.targetSkill === skillName);
+      });
+
+      if (selectedCard) {
+        refreshSkillCardAnimation(selectedCard);
+      }
+    };
+
+    skillTabs.forEach((tab) => {
+      tab.addEventListener("click", () => {
+        setActiveSkill(tab.dataset.targetSkill);
+      });
+      tab.addEventListener("pointerenter", () => {
+        setActiveSkill(tab.dataset.targetSkill);
+      });
+    });
+
+    skillCards.forEach((card) => {
+      card.addEventListener("click", () => {
+        setActiveSkill(card.dataset.skill);
+      });
+    });
+
+    if (skillsNavbar) {
+      skillsNavbar.addEventListener("pointerenter", stopSkillLoop);
+      skillsNavbar.addEventListener("pointerleave", startSkillLoop);
+    }
+
+    if (skillTabs.length > 0) {
+      setActiveSkill(skillTabs[0].dataset.targetSkill);
+    } else if (skillCards.length > 0) {
+      setActiveSkill(skillCards[0].dataset.skill);
+    }
+
+    // Project Detail Modal
+    const projectModal = document.getElementById("projectModal");
+    const projectModalClose = document.getElementById("projectModalClose");
+    const projectModalTitle = document.getElementById("projectModalTitle");
+    const projectModalSubtitle = document.getElementById("projectModalSubtitle");
+    const projectModalIntro = document.getElementById("projectModalIntro");
+    const projectModalList = document.getElementById("projectModalList");
+
+    const projectDetails = {
+      salon: {
+        title: "Teknisi Lab Komputer",
+        subtitle: "Dengan Maintenance Jaringan, Troubleshooting Komputer, LAN Configuration",
+        intro: "Berperan sebagai teknisi laboratorium komputer yang bertanggung jawab dalam menjaga stabilitas jaringan dan perangkat komputer agar operasional laboratorium berjalan optimal. Fokus utama meliputi maintenance perangkat, troubleshooting jaringan, serta pengelolaan infrastruktur LAN.",
+        points: [
+          "<strong>Maintenance & Troubleshooting</strong>: Melakukan pengecekan, perawatan, dan perbaikan perangkat komputer serta jaringan untuk memastikan seluruh sistem berjalan dengan baik.",
+          "<strong>Manajemen Jaringan LAN</strong>: Mengelola konektivitas jaringan laboratorium termasuk konfigurasi perangkat jaringan seperti router dan switch.",
+          "<strong>Konfigurasi Jaringan</strong>: Melakukan pengaturan IP addressing, konektivitas antar perangkat, serta monitoring jaringan untuk menjaga performa dan kestabilan sistem.",
+          "<strong>Dukungan Operasional</strong>: Membantu pengguna laboratorium dalam menangani kendala teknis dan memastikan kegiatan praktikum dapat berjalan lancar tanpa hambatan teknis."
+        ]
+      },
+      kursus: {
+        title: "Pengembangan & Implementasi LAB Komputer",
+        subtitle: "Dengan Network Infrastructure, Router Configuration, LAN Deployment",
+        intro: "Berperan dalam proses pengembangan dan implementasi laboratorium komputer mulai dari perencanaan infrastruktur jaringan hingga tahap deployment dan optimalisasi sistem untuk mendukung kebutuhan operasional laboratorium.",
+        points: [
+          "<strong>Perancangan Infrastruktur Jaringan</strong>: Merancang dan membangun infrastruktur jaringan laboratorium dari tahap perencanaan, konfigurasi, hingga implementasi sistem jaringan.",
+          "<strong>Deployment Workstation</strong>: Melakukan setup workstation termasuk instalasi software, konfigurasi jaringan, dan integrasi perangkat ke dalam sistem jaringan laboratorium.",
+          "<strong>Konfigurasi Router & Jaringan</strong>: Melakukan konfigurasi router seperti IP addressing, DHCP, serta pengelolaan jaringan untuk memastikan konektivitas berjalan optimal.",
+          "<strong>Desain & Optimasi Jaringan</strong>: Mendesain topologi jaringan, melakukan pengkabelan LAN, serta optimasi performa jaringan guna meningkatkan stabilitas dan efisiensi penggunaan laboratorium komputer."
+        ]
+      },
+    };
+
+    const openProjectModal = (projectKey) => {
+      if (!projectModal || !projectModalTitle || !projectModalSubtitle || !projectModalIntro || !projectModalList) return;
+
+      const detail = projectDetails[projectKey] || projectDetails.salon;
+      projectModalTitle.textContent = detail.title;
+      projectModalSubtitle.textContent = detail.subtitle;
+      projectModalIntro.textContent = detail.intro;
+      projectModalList.innerHTML = "";
+
+      detail.points.forEach((point) => {
+        const item = document.createElement("li");
+        item.innerHTML = point;
+        projectModalList.appendChild(item);
+      });
+
+      // lock background scroll (no layout change) and show modal
+      document.body.classList.add("modal-open");
+      projectModal.classList.add("active");
+      projectModal.setAttribute("aria-hidden", "false");
+    };
+
+    const closeProjectModal = () => {
+      if (!projectModal) return;
+      projectModal.classList.remove("active");
+      projectModal.setAttribute("aria-hidden", "true");
+      // release lock
+      document.body.classList.remove("modal-open");
+    };
+
+    const projectButtons = document.querySelectorAll(".project-detail-btn");
+    if (projectButtons && projectButtons.length > 0) {
+      projectButtons.forEach((button) => {
+        button.addEventListener("click", (e) => {
+          const projectKey = button.dataset.project || "salon";
+          openProjectModal(projectKey);
+          // move focus to modal for keyboard users
+          setTimeout(() => {
+            const titleEl = document.getElementById('projectModalTitle');
+            if (titleEl) titleEl.focus();
+          }, 50);
+        });
+      });
+    }
+
+    if (projectModalClose) {
+      projectModalClose.addEventListener("click", closeProjectModal);
+    }
+
+    if (projectModal) {
+      projectModal.addEventListener("click", (event) => {
+        if (event.target === projectModal) {
+          closeProjectModal();
+        }
+      });
+    }
+
+    const projectTrack = document.querySelector(".projects-track");
+    const projectGroups = document.querySelectorAll(".projects-group");
+    const projectPrevBtn = document.getElementById("projectPrevBtn");
+    const projectNextBtn = document.getElementById("projectNextBtn");
+    let projectSlideIndex = 0;
+    const projectSlideCount = projectGroups.length;
+
+    const updateProjectSlider = () => {
+      if (!projectTrack || projectSlideCount === 0) return;
+      const groupWidth = projectGroups[0].offsetWidth;
+      projectTrack.style.transform = `translateX(${-projectSlideIndex * groupWidth}px)`;
+      if (projectPrevBtn) projectPrevBtn.disabled = projectSlideIndex === 0;
+      if (projectNextBtn) projectNextBtn.disabled = projectSlideIndex === projectSlideCount - 1;
+    };
+
+    if (projectPrevBtn) {
+      projectPrevBtn.addEventListener("click", () => {
+        projectSlideIndex = Math.max(0, projectSlideIndex - 1);
+        updateProjectSlider();
+      });
+    }
+
+    if (projectNextBtn) {
+      projectNextBtn.addEventListener("click", () => {
+        projectSlideIndex = Math.min(projectSlideCount - 1, projectSlideIndex + 1);
+        updateProjectSlider();
+      });
+    }
+
+    window.addEventListener("resize", updateProjectSlider);
+    window.addEventListener("load", updateProjectSlider);
+    updateProjectSlider();
+
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape") {
+        closeProjectModal();
+      }
+    });
+
+    const typingElement = document.getElementById("typingTarget");
+    const textToType = typingElement ? "Mahasiswa Aktif" : "";
+    let charIndex = 0;
+
+    function typeText() {
+      if (!typingElement) return;
+      if (charIndex < textToType.length) {
+        typingElement.textContent += textToType.charAt(charIndex);
+        charIndex++;
+        setTimeout(typeText, 150); // Speed of typing
+      }
+    }
+
+    // Start typing when page loads
+    if (typingElement) {
+      setTimeout(typeText, 1000); // Delay 1 second before starting
+    }
+</script>
+</body>
+</html>
